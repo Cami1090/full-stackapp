@@ -1,0 +1,98 @@
+<div class="reportes-container">
+  <h2>Reportes del Sistema</h2>
+
+  <div class="filtros">
+    <div class="filtro-group">
+      <label for="fechaInicio">Fecha Inicio</label>
+      <input 
+        type="date" 
+        id="fechaInicio"
+        [(ngModel)]="fechaInicio"
+        name="fechaInicio"
+      />
+    </div>
+
+    <div class="filtro-group">
+      <label for="fechaFin">Fecha Fin</label>
+      <input 
+        type="date" 
+        id="fechaFin"
+        [(ngModel)]="fechaFin"
+        name="fechaFin"
+      />
+    </div>
+
+    <div class="filtro-group">
+      <label for="tipoReporte">Tipo de Reporte</label>
+      <select 
+        id="tipoReporte"
+        [(ngModel)]="tipoReporte"
+        name="tipoReporte"
+        (change)="filtrar()"
+      >
+        <option value="reservas">Reservas por Estado</option>
+        <option value="recursos">Recursos Más Utilizados</option>
+        <option value="usuarios">Usuarios Más Activos</option>
+      </select>
+    </div>
+
+    <button class="btn-filtrar" (click)="filtrar()" [disabled]="isLoading">
+      <span *ngIf="!isLoading">Filtrar</span>
+      <span *ngIf="isLoading">Cargando...</span>
+    </button>
+  </div>
+
+  <div *ngIf="errorMsg" class="error-msg">
+    {{ errorMsg }}
+  </div>
+
+  <div *ngIf="isLoading" class="loading">
+    Cargando reportes...
+  </div>
+
+  <div *ngIf="!isLoading && getReportesActuales().length === 0" class="empty">
+    No hay datos para mostrar en el reporte seleccionado
+  </div>
+
+  <div *ngIf="!isLoading && getReportesActuales().length > 0" class="resumen">
+    <div class="resumen-card">
+      <h3>Resumen</h3>
+      <p>Total de registros: <strong>{{ getReportesActuales().length }}</strong></p>
+
+      <p *ngIf="tipoReporte === 'reservas'">
+        Total de reservas: <strong>{{ getTotalReservas() }}</strong>
+      </p>
+    </div>
+  </div>
+
+  <table *ngIf="!isLoading && getReportesActuales().length > 0">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Tipo</th>
+        <th>Período</th>
+        <th>Detalle</th>
+        <th *ngIf="tipoReporte !== 'reservas'">Cantidad</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let reporte of getReportesActuales(); let i = index">
+        <td>{{ (i + 1).toString().padStart(3, '0') }}</td>
+        <td>
+          <span class="badge" [ngClass]="{
+            'badge-reservas': reporte.tipo === 'Reservas',
+            'badge-recursos': reporte.tipo === 'Recursos',
+            'badge-usuarios': reporte.tipo === 'Usuarios'
+          }">
+            {{ reporte.tipo }}
+          </span>
+        </td>
+        <td>{{ reporte.fecha }}</td>
+        <td>{{ reporte.detalle }}</td>
+        <td *ngIf="tipoReporte !== 'reservas'">
+          <strong>{{ reporte.cantidad }}</strong>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,98 @@
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  color: #333;
+}
+
+/* Tarjetas */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.card {
+  background: white;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  transition: .2s;
+}
+
+.card:hover {
+  transform: scale(1.03);
+}
+
+.card h3 {
+  font-size: 17px;
+  margin-bottom: 10px;
+  color: #555;
+}
+
+.number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #5b2cd6;
+  margin: 10px 0;
+}
+
+.subtitle {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+  font-weight: normal;
+}
+
+/* Tabla */
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+  margin: 20px 0;
+}
+
+.table {
+  width: 100%;
+  background: white;
+  border-radius: 12px;
+  border-collapse: collapse;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.table thead {
+  background: #f3f3f3;
+}
+
+.table th,
+.table td {
+  padding: 14px;
+  text-align: left;
+  font-size: 15px;
+}
+
+.table tbody tr:nth-child(odd) {
+  background: #fafafa;
+}
+
+/* Badges */
+.badge {
+  padding: 6px 12px;
+  border-radius: 8px;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+}
+
+.success {
+  background: #43a047;
+}
+
+.pending {
+  background: #f9a825;
+}
+
+.cancelled {
+  background: #e53935;
+}

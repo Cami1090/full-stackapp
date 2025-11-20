@@ -1,0 +1,107 @@
+.title {
+  font-size: 28px;
+  font-weight: bold;
+  margin-bottom: 25px;
+}
+
+.calendar-container {
+  width: 420px;
+  background: white;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.calendar-header h3 {
+  margin: 0;
+  font-size: 20px;
+}
+
+.calendar-header button {
+  background: #5b2cd6;
+  color: white;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-size: 15px;
+  cursor: pointer;
+  transition: .2s;
+}
+
+.calendar-header button:hover {
+  background: #4a23ad;
+}
+
+.calendar-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 8px;
+  text-align: center;
+}
+
+.day-name {
+  font-weight: 600;
+  padding-bottom: 5px;
+  color: #555;
+}
+
+.day {
+  padding: 12px 0;
+  background: #f8f7ff;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #444;
+  position: relative;
+}
+
+.day.empty {
+  background: transparent;
+}
+
+.day.has-reserva {
+  background: #e8f5e9;
+  border: 2px solid #43a047;
+  font-weight: 600;
+}
+
+.day.has-reserva::after {
+  content: '';
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 8px;
+  height: 8px;
+  background: #43a047;
+  border-radius: 50%;
+}
+
+.legend {
+  margin-top: 20px;
+  padding-top: 15px;
+  border-top: 1px solid #eee;
+  display: flex;
+  justify-content: center;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  color: #666;
+}
+
+.reserva-dot {
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  background: #43a047;
+  border-radius: 50%;
+}

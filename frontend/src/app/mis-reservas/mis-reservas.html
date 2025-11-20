@@ -1,0 +1,40 @@
+<div class="mis-reservas-container">
+  <h2 class="title">Mis Reservas</h2>
+
+  <div *ngIf="isLoading" class="loading">
+    Cargando reservas...
+  </div>
+
+  <div *ngIf="errorMsg" class="error">
+    {{ errorMsg }}
+  </div>
+
+  <div *ngIf="successMsg" class="success">
+    {{ successMsg }}
+  </div>
+
+  <div *ngIf="!isLoading && reservas.length === 0" class="empty">
+    No tienes reservas activas
+  </div>
+
+  <div class="reservas-list" *ngIf="!isLoading && reservas.length > 0">
+    <div class="reserva-card" *ngFor="let reserva of reservas">
+      <div class="reserva-info">
+        <h3>{{ getNombreRecurso(reserva.recurso) }}</h3>
+        <p><strong>Fecha de inicio:</strong> {{ formatearFecha(reserva.fechaInicio) }}</p>
+        <p><strong>Fecha de fin:</strong> {{ formatearFecha(reserva.fechaFin) }}</p>
+        <p><strong>Estado:</strong> 
+          <span class="badge confirmada">{{ reserva.estado }}</span>
+        </p>
+        <p *ngIf="reserva.asiento"><strong>Asiento:</strong> {{ reserva.asiento }}</p>
+        <p *ngIf="reserva.precio && reserva.precio !== '0'"><strong>Precio:</strong> ${{ reserva.precio }}</p>
+      </div>
+      <div class="reserva-actions">
+        <button class="btn-cancel" (click)="cancelarReserva(reserva)" [disabled]="isLoading">
+          Cancelar Reserva
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+

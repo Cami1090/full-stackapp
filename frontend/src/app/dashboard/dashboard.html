@@ -1,0 +1,64 @@
+<h2 class="title">Dashboard Administrativo</h2>
+
+<div *ngIf="isLoading" style="text-align: center; padding: 40px;">
+  Cargando datos...
+</div>
+
+<div *ngIf="!isLoading">
+  <div class="cards">
+    <div class="card">
+      <h3>Total Reservas</h3>
+      <p class="number">{{ totalReservas }}</p>
+      <p class="subtitle">Confirmadas: {{ reservasConfirmadas }} | Canceladas: {{ reservasCanceladas }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Usuarios Registrados</h3>
+      <p class="number">{{ totalUsuarios }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Recursos Disponibles</h3>
+      <p class="number">{{ recursosDisponibles }}</p>
+      <p class="subtitle">Total: {{ totalRecursos }}</p>
+    </div>
+
+    <div class="card">
+      <h3>Ingresos del Mes</h3>
+      <p class="number">${{ ingresosMes.toLocaleString('es-ES') }}</p>
+    </div>
+  </div>
+
+  <h3 class="section-title">Reservas Recientes</h3>
+
+  <div *ngIf="reservasRecientes.length === 0" style="text-align: center; padding: 40px; background: white; border-radius: 12px;">
+    No hay reservas registradas
+  </div>
+
+  <table class="table" *ngIf="reservasRecientes.length > 0">
+    <thead>
+      <tr>
+        <th>Cliente</th>
+        <th>Fecha Inicio</th>
+        <th>Fecha Fin</th>
+        <th>Recurso</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr *ngFor="let reserva of reservasRecientes">
+        <td>{{ getNombreUsuario(reserva.usuario) }}</td>
+        <td>{{ formatearFecha(reserva.fechaInicio) }}</td>
+        <td>{{ formatearFecha(reserva.fechaFin) }}</td>
+        <td>{{ getNombreRecurso(reserva.recurso) }}</td>
+        <td>
+          <span class="badge" [ngClass]="getEstadoBadgeClass(reserva.estado)">
+            {{ getEstadoTexto(reserva.estado) }}
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+

@@ -1,0 +1,40 @@
+<div class="layout">
+  
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2 class="logo">CM</h2>
+
+    <nav class="menu">
+      <!-- Solo visible para ADMIN -->
+      <a *ngIf="isAdmin" routerLink="/dashboard" routerLinkActive="active">Dashboard</a>
+      <a routerLink="/catalogo" routerLinkActive="active">Catálogo</a>
+      <a routerLink="/calendario" routerLinkActive="active">Calendario</a>
+      <a routerLink="/mis-reservas" routerLinkActive="active">Mis Reservas</a>
+      <a routerLink="/perfil" routerLinkActive="active">Perfil</a>
+      
+      <!-- Solo visible para ADMIN -->
+      <a *ngIf="isAdmin" routerLink="/reportes" routerLinkActive="active">Reportes</a>
+      <a *ngIf="isAdmin" routerLink="/recurso" routerLinkActive="active" style="color: #f9d342;">
+        Registrar Recurso
+      </a>
+
+      <!-- Logout -->
+      <a (click)="logout()" style="margin-top: 30px; color: #ffdddd; cursor: pointer;">
+        Cerrar sesión
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Contenido principal -->
+  <div class="main">
+    <header class="topbar">
+      <span class="username">Hola, {{ username }}</span>
+    </header>
+
+    <div class="content">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+
+</div>
+

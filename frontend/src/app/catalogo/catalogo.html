@@ -1,0 +1,41 @@
+<h2 class="title">Catálogo de espacios</h2>
+
+<div *ngIf="isLoading" style="text-align: center; padding: 20px;">
+  Cargando recursos...
+</div>
+
+<div class="catalog" *ngIf="!isLoading">
+  <div class="item" *ngFor="let recurso of recursos">
+
+    <div class="info">
+      <h3>{{ recurso.nombre }}</h3>
+
+      <p class="cap">Tipo: {{ recurso.tipo }}</p>
+      <p class="cap">Capacidad: {{ recurso.capacidad }} personas</p>
+      <p class="cap">Ubicación: {{ recurso.ubicacion }}</p>
+
+      <span 
+        class="badge" 
+        [ngClass]="{
+          'disp': recurso.estado === 'Disponible',
+          'ocup': recurso.estado === 'Ocupado' || recurso.estado === 'Ocupada' || recurso.estado === 'Mantenimiento'
+        }">
+        {{ recurso.estado }}
+      </span>
+
+      <button 
+        class="btn" 
+        [disabled]="recurso.estado !== 'Disponible'"
+        (click)="reservar(recurso)"
+        type="button"
+        style="margin-top: 10px;">
+        <span *ngIf="recurso.estado === 'Disponible'">Reservar</span>
+        <span *ngIf="recurso.estado !== 'Disponible'">No Disponible</span>
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="recursos.length === 0" style="text-align: center; padding: 20px; grid-column: 1 / -1;">
+    No hay recursos disponibles
+  </div>
+</div>

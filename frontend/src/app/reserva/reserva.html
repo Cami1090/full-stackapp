@@ -1,0 +1,76 @@
+<div class="reserva-container">
+  <div class="reserva-card">
+    <h2 class="title">Crear Reserva</h2>
+
+    <form class="reserva-form" (submit)="crearReserva(); $event.preventDefault();">
+      
+      <label for="recurso">Recurso *</label>
+      <select
+        id="recurso"
+        [(ngModel)]="recursoSeleccionado"
+        name="recurso"
+        required
+      >
+        <option value="">Selecciona un recurso</option>
+        <option *ngFor="let recurso of recursos" [value]="recurso.id">
+          {{ recurso.nombre }} - {{ recurso.tipo }} (Capacidad: {{ recurso.capacidad }})
+        </option>
+      </select>
+
+      <label for="fechaInicio">Fecha de Inicio *</label>
+      <input
+        type="date"
+        id="fechaInicio"
+        [(ngModel)]="fechaInicio"
+        name="fechaInicio"
+        required
+      />
+
+      <label for="fechaFin">Fecha de Fin *</label>
+      <input
+        type="date"
+        id="fechaFin"
+        [(ngModel)]="fechaFin"
+        name="fechaFin"
+        required
+      />
+
+      <label for="asiento">Asiento (Opcional)</label>
+      <input
+        type="text"
+        id="asiento"
+        [(ngModel)]="asiento"
+        name="asiento"
+        placeholder="Ej: A1, Mesa 5"
+      />
+
+      <label for="precio">Precio (Opcional)</label>
+      <input
+        type="text"
+        id="precio"
+        [(ngModel)]="precio"
+        name="precio"
+        placeholder="Ej: 50000"
+      />
+
+      <button class="btn-register" type="submit" [disabled]="isLoading">
+        <span *ngIf="!isLoading">Crear Reserva</span>
+        <span *ngIf="isLoading">Creando...</span>
+      </button>
+
+      <button class="btn-cancel" type="button" (click)="cancelar()" [disabled]="isLoading">
+        Cancelar
+      </button>
+
+      <p class="success" *ngIf="successMsg">
+        {{ successMsg }}
+      </p>
+
+      <p class="error" *ngIf="errorMsg">
+        {{ errorMsg }}
+      </p>
+
+    </form>
+  </div>
+</div>
+

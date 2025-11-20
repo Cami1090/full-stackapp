@@ -1,0 +1,31 @@
+<h2 class="title">Calendario de Reservas</h2>
+
+<div class="calendar-container">
+
+  <div class="calendar-header">
+    <button (click)="prevMonth()">❮</button>
+    <h3>{{ monthNames[currentMonth] }} {{ currentYear }}</h3>
+    <button (click)="nextMonth()">❯</button>
+  </div>
+
+  <div class="calendar-grid">
+    <div class="day-name" *ngFor="let d of dayNames">{{ d }}</div>
+
+    <div 
+      class="day"
+      *ngFor="let day of calendarDays"
+      [class.empty]="day === 0"
+      [class.has-reserva]="day !== 0 && tieneReserva(day)"
+    >
+      <span *ngIf="day !== 0">{{ day }}</span>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item">
+      <span class="reserva-dot"></span>
+      <span>Día con reserva confirmada</span>
+    </div>
+  </div>
+
+</div>
