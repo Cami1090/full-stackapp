@@ -3,18 +3,12 @@ name: Docker Publish
 on:
   push:
     branches: [ main, master ]
-    paths:
-      - 'frontend/**'
-      - 'backend/**'
-      - 'nginx.conf'
-      - '.github/workflows/docker-publish.yml'
-  workflow_dispatch:
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout código
+      - name: Checkout
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
@@ -28,88 +22,52 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-      # =====================================================
-      # Detectar qué cambió (frontend o backend) cambió
-      # =====================================================
-      - name: Detectar cambios
-        id: changes
+      # Fuerza que SIEMPRE construya cuando lo ejecutas manualmente
+      - name: ¿Construir todo en modo manual?
+        id: force
         run: |
-          # En workflow_dispatch no hay HEAD~1 → comparamos con main
           if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            BASE="origin/${{ github.base_ref || 'main' }}"
+            echo "build_all=true" >> $GITHUB_OUTPUT
           else
-            BASE="HEAD~1"
-          fi
-
-          # Frontend + nginx.conf
-          if git diff --quiet $BASE HEAD -- frontend/ nginx.conf 2>/dev/null; then
-            echo "frontend=false" >> $GITHUB_OUTPUT
-          else
-            echo "frontend=true" >> $GITHUB_OUTPUT
-          fi
-
-          # Backend
-          if git diff --quiet $BASE HEAD -- backend/ 2>/dev/null; then
-            echo "backend=false" >> $GITHUB_OUTPUT
-          else
-            echo "backend=true" >> $GITHUB_OUTPUT
+            echo "build_all=false" >> $GITHUB_OUTPUT
           fi
 
       # =====================================================
-      # BACKEND – Spring Boot
+      # BACKEND
       # =====================================================
-      - name: Cache Gradle
-        if: steps.changes.outputs.backend == 'true'
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('backend/gradle/wrapper/gradle-wrapper.properties', 'backend/**/build.gradle.kts') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
-
       - name: Build & Push Backend
-        if: steps.changes.outputs.backend == 'true'
         uses: docker/build-push-action@v6
         with:
           context: ./backend
           file: ./backend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/backend:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/backend:latest
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/backend:cache,mode=max
-          labels: |
-            org.opencontainers.image.source=${{ github.repositoryUrl }}
 
       # =====================================================
-      # FRONTEND – Angular + NGINX
+      # FRONTEND
       # =====================================================
-      - name: Cache node_modules
-        if: steps.changes.outputs.frontend == 'true'
-        uses: actions/cache@v4
-        with:
-          path: frontend/node_modules
-          key: npm-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
-          restore-keys: npm-${{ runner.os }}-
-
       - name: Build & Push Frontend
-        if: steps.changes.outputs.frontend == 'true'
         uses: docker/build-push-action@v6
         with:
           context: ./frontend
           file: ./frontend/Dockerfile
           push: true
-          tags: ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/frontend:${{ github.sha }}
           cache-from: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/frontend:latest
           cache-to: type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/frontend:cache,mode=max
-          labels: |
-            org.opencontainers.image.source=${{ github.repositoryUrl }}
 
       # =====================================================
-      # Resumen final
+      # Mensaje final con los links directos
       # =====================================================
-      - name: Resumen
+      - name: Enlaces de las imágenes
         run: |
-          echo "Frontend construido: ${{ steps.changes.outputs.frontend }}"
-          echo "Backend construido:  ${{ steps.changes.outputs.backend }}"
+          echo ""
+          echo "BACKEND  → https://hub.docker.com/r/${{ secrets.DOCKERHUB_USERNAME }}/backend"
+          echo "FRONTEND → https://hub.docker.com/r/${{ secrets.DOCKERHUB_USERNAME }}/frontend"
+          echo "Listo! Las imágenes ya están en Docker Hub"
